@@ -1,7 +1,7 @@
 
 ## Now This Is Podracing!
 Podracing is a challenge in Outer Wilds revolving around flying around the Solar System and landing on specific locations. The more locations you land on, the higher your score.
-The Podracing Tracker modification is then a mod specifically designed to track the score and rules of the Podracing.
+The Podracing Tracker modification is then a mod specifically designed to track the score and rules of Podracing.
 
 You can find the specific rules of the challenge here: [Now This Is Podracing!](https://docs.google.com/spreadsheets/d/1Bg4JSZbgrWFhUh_O9f2fur0on2GWKHVNhJipSkRYD-I/edit?gid=0#gid=0)
 
