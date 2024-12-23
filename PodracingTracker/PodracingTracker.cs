@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using System.Globalization;
 using UnityEngine.InputSystem;
 using OWML.ModHelper.Menus;
 using OWML.ModHelper.Menus.NewMenuSystem;
@@ -23,8 +24,8 @@ namespace PodracingTracker;
 
 //The rules of podracing are as follows:
 /*A, Basic Rules:
-1. For a qualifying run you are required to end the run with the most Qualifying Takeoffs performed at any of the Takeoff Locations.
-2. Only one Qualifying Takeoff can be performed per a Takeoff Location.
+1. For a qualifying run you are required to end the run with the most Qualifying Takeoffs performed at any of the Landing Locations.
+2. Only one Qualifying Takeoff can be performed per a Landing Location.
 3. The order in which these takeoffs are performed doesn't matter.
 4. Score is tallied by the amount of takeoffs performed as priority, and time of the run as secondary. (L03, T15:00 > L02, T04:00)
 5. The rules of Podracing are vague, but are to be taken literally. It is half the fun to figure out the Takeoff itself, and find loop holes to get the most optimal route.
@@ -35,7 +36,7 @@ B, Start and End:
 2. The run ends one second after you become grounded* while wearing a spacesuit. Leaving this state cancels this rule until next time.
 3. The run ends one second after waking up in another loop. (The animation time is added to the run)
 
-C, Takeoff Location is defined either as:
+C, Landing Location is defined either as:
 1. A specified radius around a markable/lock-on location**. (Hollow's Lantern is a Lock-On, Village is a markable ship-log)
 2. Any*** markable main ship-log location. (Village - main, Zero-G Cave - child)
 3. If the criteria for two or more takeoffs are met at once, they all count as their own takeoffs. (2 in 1)
@@ -57,13 +58,13 @@ F, Permitted use of tools during a run:
 3: Podracing Tracker mod
 
 *Grounded is defined as being in gravity. The value of gravity on your hud is visible and is higher than zero. (Gravity 0.1x-inf)
-**By 'location' it is meant literally a 'ship-log location'. Some Takeoff Locations are then either markable ship-logs, or objects that can be Locked-On in-game.
-***If ship-log location isn't specified in criteria, any markable location can be counted as a Takeoff Location, so far all other criteria are met. (Any 0-50m)
+**By 'location' it is meant literally a 'ship-log location'. Some Landing Locations are then either markable ship-logs, or objects that can be Locked-On in-game.
+***If ship-log location isn't specified in criteria, any markable location can be counted as a Landing Location, so far all other criteria are met. (Any 0-50m)
 ****You can count any takeoff as shipless, so far your ship is more than 100m away. (Ship 100-inf m)*/
 
-//The following is a list of all the Takeoff Locations in the game, and their specific criteria for a takeoff.
+//The following is a list of all the Landing Locations in the game, and their specific criteria for a takeoff.
 /*Ordered by the difficulty of a ship takeoff.
- - Basic description of the takeoff location (Specific tracking-ready parameters)
+ - Basic description of the Landing Location (Specific tracking-ready parameters)
 
 Timber Hearth:
  - Anywhere in the Village. (Village 0-50m)
@@ -307,7 +308,6 @@ public class PodracingTracker : ModBehaviour
         RuleManager.IsPodracing.OnPodracingStart += OnPodracingStarted;
         RuleManager.IsPodracing.OnPodracingCompleted += OnPodracingCompleted;
         RuleManager.IsPodracing.OnPodracingFailed += OnPodracingFailed;
-
     }
     public void OnCompleteSceneLoad(OWScene previousScene, OWScene newScene)
     {
@@ -411,10 +411,22 @@ public class PodracingTracker : ModBehaviour
                 {return;}
 
             if (closestBody != lastClosestBody)
-                ModHelper.Console.WriteLine($"Closest AstroObject: {UtilityTools.NameFromAstro(closestBody)??"Unknown"}", MessageType.Info);
-                GUILineManager.ClearCorner(Corner.CenterLeft); // Clear the previous data
-            lastClosestBody = closestBody;
+            {
+                // The Stranger is an exception, it needs to be at most 500 units away to show up
+                bool isRingWorld = UtilityTools.IdFromAstro(closestBody) == "RingWorld";
+                bool isWithinDistance = Vector3.Distance(player.transform.position, closestBody.transform.position) <= 500;
 
+                if (!isRingWorld || isWithinDistance)
+                {
+                    ModHelper.Console.WriteLine($"Closest AstroObject: {UtilityTools.NameFromAstro(closestBody) ?? "Unknown"}", MessageType.Info);
+                    GUILineManager.ClearCorner(Corner.CenterLeft); // Clear the previous data
+                    lastClosestBody = closestBody;
+                }
+                else
+                {
+                    closestBody = lastClosestBody;
+                }
+            }
             // Get all distances for the closest AstroObject
             string bodyId = UtilityTools.playerInMaze == null ? UtilityTools.IdFromAstro(closestBody) : "DarkBramble";
             // Get all landings for the closest AstroObject
@@ -427,7 +439,7 @@ public class PodracingTracker : ModBehaviour
             landingResults = nearestLocation.DisplayLocation();
 
             // Track landed locations
-            RuleManager.IsPodracing.score = $"L{completedLandings.Count:00} T{RuleManager.IsPodracing.podracingTime:00:00.000}";
+            RuleManager.IsPodracing.score = $"L{completedLandings.Count:00}, T{RuleManager.IsPodracing.podracingTime.ToString("00:00.000", CultureInfo.InvariantCulture)}";
             GUILineManager.SetLine("completedLandings", $"<b><color=green>{string.Join("\n", completedLandings)}</color></b>", true, Corner.CenterRight);
         }
         //Debug();
@@ -456,7 +468,6 @@ public class PodracingTracker : ModBehaviour
                         completedLandings.Add($"{nearestLocation.Name}/{landing.Name}/{anyRequirement.Id}");
                         completedAnyLandings.Add(anyRequirement.Id);
                         ModHelper.Console.WriteLine($"Completed landing: {completedLandings.Last()}", MessageType.Info);
-                        landing.IsLanded = true;
                         LocationManager.RemoveAnyLanding(anyRequirement.Id);
                         LocationManager.GatherDistances(nearestLocation);
                     }
@@ -499,18 +510,20 @@ public class PodracingTracker : ModBehaviour
         }
 
         // print the completed landings into a document
-        string path = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-            "PodracingTracker",
-            $"{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt"
-        );
-        Directory.CreateDirectory(Path.GetDirectoryName(path));
+        string path = ModHelper.Config.GetSettingsValue<string>("Score Output Directory");
+        path = Environment.ExpandEnvironmentVariables(path);
+        if (!Directory.Exists(path)) {
+            Directory.CreateDirectory(path);
+        }
+
+        path = Path.Combine(path, $"PTScore_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt");
         using StreamWriter sw = new(path);
         sw.WriteLine($"Final score: {RuleManager.IsPodracing.score}");
         foreach (string landing in completedLandings)
         {
             sw.WriteLine(landing);
         }
+        ModHelper.Console.WriteLine($"Score saved to {path}", MessageType.Info);
     }
     /// <summary>
     /// OnPodracingFailed is called when the player fails a podracing run.
@@ -523,6 +536,11 @@ public class PodracingTracker : ModBehaviour
         completedLandings.Clear();
         completedAnyLandings.Clear();
     }
+    /*public void OnConfigChanged() {
+        ModHelper.Console.WriteLine("Config Changed", MessageType.Info);
+        GUILineManager.ClearLines();
+        RuleManager.InitializeRules();
+    }*/
     public void OnGUI()
     {
         if (PauseMenuManager != null && PauseMenuManager.IsOpen())

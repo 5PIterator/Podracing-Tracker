@@ -36,10 +36,12 @@ namespace PodracingTracker
         public static Dictionary<string, Transform> relevantLocations;
         public static Dictionary<string, Transform> relevantLandings;
         public static Dictionary<string, Transform> anyLandings;
+        public static bool showLandingDetails;
 
         public static void Initialize(IModHelper ModHelper)
         {
             LocationManager.ModHelper = ModHelper;
+            showLandingDetails = ModHelper.Config.GetSettingsValue<bool>("Hide Any Requirement");
             LoadJson();
         }
 
@@ -288,6 +290,11 @@ namespace PodracingTracker
                         requirement.Distance = closestAnyDistance;
                         requirement.Id = closestAnyLanding;
                     }
+                    else if (landing.IsLanded)
+                    {
+                        // Skip landings that have already been landed
+                        continue;
+                    }
                     else if (relevantLandings != null && relevantLandings.TryGetValue(requirement.Id, out Transform requirementTransform))
                     {
                         // Check or calculate distance
@@ -447,13 +454,16 @@ namespace PodracingTracker
                 {
                     GUILineManager.SetLine($"{UIid}", $"  <b><color=white>{Name}</color></b>\n  <i>{Description}</i>", true, InfoCorner);
 
-                    foreach (Requirement requirement in Requirements)
-                    {
-                        //Hide requirement if the id matches the id of maze landing, and the player is not in the maze
-                        requirement.Hidden = LocationManager.mazeLandings.ContainsKey(requirement.Id) && LocationManager.mazeLandings[requirement.Id] != UtilityTools.playerInMaze;
-                        //GUILineManager.SetLine($"{parentLocation.Name}/{Name}/{requirement.Name}", $"    {requirement.Name} ({requirement.Id})", true, corner);
-                        requirement.DisplayRequirement();
-                    }
+                }
+                foreach (Requirement requirement in Requirements)
+                {
+                    //Hide requirement if the id matches the id of maze landing, and the player is not in the same level of the maze
+                    requirement.Hidden =
+                        LocationManager.mazeLandings.ContainsKey(requirement.Id) &&
+                        LocationManager.mazeLandings[requirement.Id] != UtilityTools.playerInMaze
+                    ;
+                    //GUILineManager.SetLine($"{parentLocation.Name}/{Name}/{requirement.Name}", $"    {requirement.Name} ({requirement.Id})", true, corner);
+                    requirement.DisplayRequirement();
                 }
             }
             return RequirementsMet;
@@ -491,19 +501,22 @@ namespace PodracingTracker
 
             string idText;
             string distanceText;
+            string detailsText;
             if (Type == "Any")
             {
-                idText = $"{Type} ({Id})";
+                idText = $"{Type}";
+                detailsText = $"({Id})";
             }
             else
             {
-                idText = $"{Id} ({Type})";
+                idText = $"{Id}";
+                detailsText = $"({Type})";
             }
-
+            detailsText = LocationManager.showLandingDetails ? detailsText : "";
             distanceText = Distance < 10000 && !Hidden ? Distance.ToString("0.00") : "####.##";
 
             //string statusText = string.Format("    {0,-10}<{1,8:0.00}<{2,-10} - {3}", minText, Distance, maxText, idText);
-            string statusText = $"    {minText}<{distanceText}<{maxText}\t - {idText}";
+            string statusText = $"    {minText}<{distanceText}<{maxText}\t - {idText} {detailsText}";
             //GUILineManager.SetLine($"{Name}", string.Format("    {3}: {0,-10}<{1,8:0.00}<{2,-10}", minText, Distance, maxText, idText), true, corner);
             GUILineManager.SetLine($"{UIid}", statusText, true, corner);
         }

@@ -204,7 +204,7 @@
     },
     "IsLockedOn": {
       "type": "selector",
-      "value": "Track",
+      "value": "Track&Display",
       "options": [
         "Track",
         "Display",
@@ -229,7 +229,7 @@
     },
     "IsMarked": {
       "type": "selector",
-      "value": "Track",
+      "value": "Track&Display",
       "options": [
         "Track",
         "Display",
@@ -254,7 +254,7 @@
     },
     "IsNewExpedition": {
       "type": "selector",
-      "value": "Track",
+      "value": "Track&Display",
       "options": [
         "Track",
         "Display",
@@ -279,7 +279,7 @@
     },
     "IsTitleScreen": {
       "type": "selector",
-      "value": "Track",
+      "value": "Track&Display",
       "options": [
         "Track",
         "Display",
@@ -304,7 +304,7 @@
     },
     "IsModified": {
       "type": "selector",
-      "value": "Track",
+      "value": "Track&Display",
       "options": [
         "Track",
         "Display",
@@ -327,6 +327,7 @@
         "BottomRight"
       ]
     },
+    "Show Landing Details": false,
     "Score Output Directory": "%USERPROFILE%\\Documents\\PodracingTracker"
   }
 }

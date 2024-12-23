@@ -1,3 +1,26 @@
+// AstroObjects
+Sun,
+CaveTwin,
+TowerTwin,
+TimberHearth,
+BrittleHollow,
+GiantsDeep,
+DarkBramble,
+Comet,
+WhiteHole,
+WhiteHoleTarget,
+QuantumMoon,
+RingWorld,
+ProbeCannon,
+TimberMoon,
+VolcanicMoon,
+Eye,
+HourglassTwins,
+SunStation,
+DreamWorld,
+MapSatellite
+
+// Entries
 S_SUNSTATION
 CT_CHERT
 CT_QUANTUM_MOON_LOCATOR
@@ -88,24 +111,9 @@ IP_DREAM_LIBRARY_2
 IP_DREAM_ZONE_3
 IP_DREAM_LIBRARY_3
 
+//Entries with fogVolumes
+DB_ESCAPE_POD - EscapePod
+DB_NOMAI_GRAVE - EscapePod
+DB_VESSEL - Vessel
+DB_FELDSPAR - Pioneer
 
-Sun,
-CaveTwin,
-TowerTwin,
-TimberHearth,
-BrittleHollow,
-GiantsDeep,
-DarkBramble,
-Comet,
-WhiteHole,
-WhiteHoleTarget,
-QuantumMoon,
-RingWorld,
-ProbeCannon,
-TimberMoon,
-VolcanicMoon,
-Eye,
-HourglassTwins,
-SunStation,
-DreamWorld,
-MapSatellite

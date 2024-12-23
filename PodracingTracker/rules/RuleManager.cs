@@ -116,7 +116,7 @@ namespace PodracingTracker
             /// <summary>
             /// The podracing score. L: Landings, T: Time.
             /// </summary>
-            public static string score = "L:00 T:00:00.000";
+            public static string score = "L:00, T:00:00.000";
             /// <summary>
             /// The time in seconds the podracing run has been active.
             /// </summary>
@@ -924,6 +924,7 @@ namespace PodracingTracker
 
             public override void Update()
             {
+                //ModHelper.Console.WriteLine($"IsMarked: {ShipLogEntryHUDMarker.s_entryLocation != null}");
                 isMarked = ShipLogEntryHUDMarker.s_entryLocation != null;
             }
 
@@ -1031,6 +1032,7 @@ namespace PodracingTracker
                 rule.AllowUpdate = ModHelper.Config.GetSettingsValue<string>(rule.GetType().Name).Contains("Track");
                 rule.AllowDisplay = ModHelper.Config.GetSettingsValue<string>(rule.GetType().Name).Contains("Display");
                 rule.TextCorner = (Corner)Enum.Parse(typeof(Corner), ModHelper.Config.GetSettingsValue<string>($"{rule.GetType().Name} Gui"));
+                ModHelper.Console.WriteLine($"Rule: {rule.GetType().Name} AllowUpdate: {rule.AllowUpdate} AllowDisplay: {rule.AllowDisplay} TextCorner: {rule.TextCorner}", MessageType.Info);
                 rule.Initialize();
             }
         }

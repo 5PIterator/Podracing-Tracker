@@ -38,6 +38,7 @@ public class UtilityTools : ModBehaviour
         {
             float distance = Vector3.Distance(targetTransform.position, astroObject.position);
             //ModHelper.Console.WriteLine($"Distance to {astroObject.name}: {distance}", MessageType.Info);
+
             if (distance < minDistance)
             {
                 minDistance = distance;
