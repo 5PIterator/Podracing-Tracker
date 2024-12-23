@@ -1,9 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/manifest_schema.json",
   "filename": "PodracingTracker.dll",
-  "author": "Ernesto",
+  "author": "TheIterator",
   "name": "PodracingTracker",
-  "uniqueName": "Ernesto.PodracingTracker",
+  "uniqueName": "TheIterator.PodracingTracker",
   "version": "0.1.0",
   "owmlVersion": "2.14.0",
   "dependencies": []
