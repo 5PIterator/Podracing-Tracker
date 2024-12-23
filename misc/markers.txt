@@ -1,0 +1,13 @@
+LocationBH_Cap
+None
+LocationCT_Cap
+LocationDB_Cap
+LocationHGT_Cap
+LocationCo_Cap
+LocationPlayer_Cap
+LocationTHMoon_Cap
+LocationTT_Cap
+LocationBHMoon_Cap
+LocationTH_Cap
+LocationGD_Cap
+LocationShip_Cap

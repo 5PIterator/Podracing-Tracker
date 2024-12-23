@@ -1,0 +1,346 @@
+{
+  "locations": [
+    {
+      "id": "TimberHearth",
+      "name": "Timber Hearth",
+      "landings": [
+        {
+          "name": "Village",
+          "description": "Anywhere in the Village.",
+          "requirements": [
+            {
+              "id": "TH_VILLAGE",
+              "type": "Entry",
+              "min": 0,
+              "max": 50
+            }
+          ]
+        },
+        {
+          "name": "Nomai Mines",
+          "description": "Inside the largest geyser.",
+          "requirements": [
+            {
+              "id": "TimberHearth",
+              "type": "Body",
+              "min": 215,
+              "max": 220
+            },
+            {
+              "id": "TH_NOMAI_MINE",
+              "type": "Entry",
+              "min": 110,
+              "max": 130
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "QuantumMoon",
+      "name": "Quantum Moon",
+      "landings": [
+        {
+          "name": "Quantum Moon",
+          "description": "Anywhere on the Quantum Moon.",
+          "requirements": [
+            {
+              "id": "QuantumMoon",
+              "type": "Body",
+              "min": 0,
+              "max": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GiantsDeep",
+      "name": "Giant's Deep",
+      "landings": [
+        {
+          "name": "Orbit",
+          "description": "Anywhere on the Giant's Deep's orbit.",
+          "requirements": [
+            {
+              "id": "GiantsDeep",
+              "type": "Body",
+              "min": 750,
+              "max": 2000
+            },
+            {
+              "id": "Any",
+              "type": "Any",
+              "min": 0,
+              "max": 70
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WhiteHole",
+      "name": "White Hole",
+      "landings": [
+        {
+          "name": "White Hole",
+          "description": "Anywhere around the White Hole.",
+          "requirements": [
+            {
+              "id": "WHITE_HOLE_STATION",
+              "type": "Entry",
+              "min": 0,
+              "max": 1000
+            },
+            {
+              "id": "Any",
+              "type": "Any",
+              "min": 0,
+              "max": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HourglassTwins",
+      "name": "Ash Twins",
+      "landings": [
+        {
+          "name": "Ember Twin Sand Pillar",
+          "description": "Inside the sand pillar anywhere on Ember Twin's equator.",
+          "requirements": [
+            {
+              "id": "CaveTwin",
+              "type": "Body",
+              "min": 100,
+              "max": 150
+            },
+            {
+              "id": "TowerTwin",
+              "type": "Body",
+              "min": 370,
+              "max": 375
+            },
+            {
+              "id": "Any",
+              "type": "Any",
+              "min": 0,
+              "max": 80
+            }
+          ]
+        },
+        {
+          "name": "Ash Twin Sand Pillar",
+          "description": "Inside the sand pillar on Ash Twin's equator.",
+          "requirements": [
+            {
+              "id": "TowerTwin",
+              "type": "Body",
+              "min": 135,
+              "max": 150
+            },
+            {
+              "id": "CaveTwin",
+              "type": "Body",
+              "min": 365,
+              "max": 370
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "VolcanicMoon",
+      "name": "Hollow's Lantern",
+      "landings": [
+        {
+          "name": "Hollow's Lantern",
+          "description": "Anywhere on the Hollow's Lantern.",
+          "requirements": [
+            {
+              "id": "VolcanicMoon",
+              "type": "Body",
+              "min": 0,
+              "max": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BrittleHollow",
+      "name": "Brittle Hollow",
+      "landings": [
+        {
+          "name": "Black Hole Forge",
+          "description": "Above the Black Hole Forge.",
+          "requirements": [
+            {
+              "id": "BrittleHollow",
+              "type": "Body",
+              "min": 250,
+              "max": 300
+            },
+            {
+              "id": "BH_BLACK_HOLE_FORGE",
+              "type": "Entry",
+              "min": 180,
+              "max": 200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Comet",
+      "name": "The Interloper",
+      "landings": [
+        {
+          "name": "Shuttle",
+          "description": "Next to the Shuttle.",
+          "requirements": [
+            {
+              "id": "COMET_SHUTTLE",
+              "type": "Entry",
+              "min": 0,
+              "max": 50
+            }
+          ]
+        },
+        {
+          "name": "North Pole",
+          "description": "On the North Pole.",
+          "requirements": [
+            {
+              "id": "Comet",
+              "type": "Body",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "id": "Sun",
+              "type": "Body",
+              "min": 0,
+              "max": 3000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DarkBramble",
+      "name": "Dark Bramble",
+      "landings": [
+        {
+          "name": "Feldspar's Camp",
+          "description": "Next to Feldspar's Camp.",
+          "requirements": [
+            {
+              "id": "DB_FELDSPAR",
+              "type": "Entry",
+              "min": 0,
+              "max": 50
+            }
+          ]
+        },
+        {
+          "name": "The Vessel",
+          "description": "On the The Vessel.",
+          "requirements": [
+            {
+              "id": "DB_VESSEL",
+              "type": "Entry",
+              "min": 0,
+              "max": 300
+            }
+          ]
+        },
+        {
+          "name": "Frozen Jellyfish",
+          "description": "Next to Frozen Jellyfish.",
+          "requirements": [
+            {
+              "id": "DB_FROZEN_JELLYFISH",
+              "type": "Entry",
+              "min": 0,
+              "max": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Sun",
+      "name": "Sun",
+      "landings": [
+        {
+          "name": "Sun Station",
+          "description": "Anywhere on the Sun's orbit.",
+          "requirements": [
+            {
+              "id": "Sun",
+              "type": "Body",
+              "min": 0,
+              "max": 4000
+            },
+            {
+              "id": "Any",
+              "type": "Any",
+              "min": 0,
+              "max": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RingWorld",
+      "name": "The Stranger",
+      "landings": [
+        {
+          "name": "The Stranger",
+          "description": "Anywhere on The Stranger.",
+          "requirements": [
+            {
+              "id": "RingWorld",
+              "type": "Body",
+              "min": 0,
+              "max": 500
+            },
+            {
+              "id": "Any",
+              "type": "Any",
+              "min": 0,
+              "max": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TimberMoon",
+      "name": "The Attlerock",
+      "landings": [
+        {
+          "name": "Lunar Lookout",
+          "description": "On top of the Lunar Lookout.",
+          "requirements": [
+            {
+              "id": "TimberMoon",
+              "type": "Body",
+              "min": 80,
+              "max": 85
+            },
+            {
+              "id": "TM_NORTH_POLE",
+              "type": "Entry",
+              "min": 0,
+              "max": 10
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
