@@ -308,6 +308,16 @@ public class PodracingTracker : ModBehaviour
         RuleManager.IsPodracing.OnPodracingStart += OnPodracingStarted;
         RuleManager.IsPodracing.OnPodracingCompleted += OnPodracingCompleted;
         RuleManager.IsPodracing.OnPodracingFailed += OnPodracingFailed;
+
+        if (ModHelper.Config.GetSettingsValue<string>("KoFi? :3") == "Yes kofi? :3")
+        {
+            GUILineManager.SetLine("KoFi", "<color=green>KoFi? :3 - TheIterator</color>", true, Corner.BottomLeft);
+        }
+        else
+        {
+            GUILineManager.RemoveLine("KoFi");
+        }
+
     }
     public void OnCompleteSceneLoad(OWScene previousScene, OWScene newScene)
     {

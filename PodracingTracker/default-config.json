@@ -328,6 +328,15 @@
       ]
     },
     "Show Landing Details": false,
-    "Score Output Directory": "%USERPROFILE%\\Documents\\PodracingTracker"
+    "Score Output Directory": "%USERPROFILE%\\Documents\\PodracingTracker",
+    "KoFi? :3":
+    {
+      "type": "selector",
+      "value": "Yes kofi? :3",
+      "options": [
+        "Yes kofi? :3",
+        "No Kofi ;_;"
+      ]
+    }
   }
 }
