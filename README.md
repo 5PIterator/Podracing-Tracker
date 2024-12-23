@@ -57,7 +57,8 @@ The format is as follows:
 - Initial release.
 
 ## Credits
-- Me, for making the mod. Money here:
+- I, for coming up with the challenge. Money here: [$$$Ko-fi$$$](https://ko-fi.com/theiterator)
+- Me, for coding the mod. Money here: [$$$Ko-fi$$$](https://ko-fi.com/theiterator)
 
 ## Installation
 Use the [Outer Wilds Mod Manager](https://outerwildsmods.com/mod-manager) to install the mod.
