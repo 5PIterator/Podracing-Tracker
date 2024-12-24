@@ -280,7 +280,7 @@ namespace PodracingTracker
             public override Corner TextCorner { get; set; }
 
             // events
-            public static event Action OnPodracingExit;
+            //public static event Action OnPodracingExit;
 
             // properties
             /// <summary>

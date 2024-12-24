@@ -129,10 +129,10 @@ public class PodracingTracker : ModBehaviour
     // Experimental Debugging
     private float timer = 0f;
     private float timerStart = 0f;
-    private bool debug_triggered = false;
+    //private bool debug_triggered = false;
     private ShipLogEntryHUDMarker shipLogEntryHUDMarker;
     private LockOnReticule lockOnReticule; //LockOnReticule
-    private PlayerLockOnTargeting playerLockOnTargeting;
+    //private PlayerLockOnTargeting playerLockOnTargeting;
     private PlayerCameraController playerCameraController;
     private ShipCockpitUI shipCockpitUI;
     public static bool isLockedOn = false;
