@@ -298,7 +298,7 @@ public class PodracingTracker : ModBehaviour
         ModHelper.Console.WriteLine($"{nameof(PodracingTracker)} is loaded!", MessageType.Success);
         modHelper = ModHelper;
 
-        new Harmony("Ernesto.PodracingTracker").PatchAll(Assembly.GetExecutingAssembly());
+        new Harmony("TheIterator.PodracingTracker").PatchAll(Assembly.GetExecutingAssembly());
 
         OnCompleteSceneLoad(OWScene.TitleScreen, OWScene.TitleScreen);
 
