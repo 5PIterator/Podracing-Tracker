@@ -8,7 +8,7 @@ You can find the specific rules of the challenge here: [Now This Is Podracing!](
 
 ## Features
 Currently, the mod is in a very early stage of development, issues and bugs are expected. If you find any, please report them in the issues tab of this repository.
-You may toggle each some of the rules and where they are displayed on the screen, though the functionality hasn't been fully tested or implemented yet.
+You may toggle some of the rules and where they are displayed on the screen, though the functionality hasn't been fully tested or implemented yet.
 Final score is printed into the path: `Documents\PodracingTracker\PTScore_<date>.txt`. Which can be changed in the settings of the mod.
 
 Code is a bit of a mess, and this version is not the most efficient, but it works for now. If enough people are interested in the mod, I will work on it more.
