@@ -14,8 +14,8 @@ permissions:
   contents: write
 
 env:
-  PROJ_USERNAME: Ernesto
-  PROJ_NAME: YourModName
+  PROJ_USERNAME: TheIterator
+  PROJ_NAME: PodracingTracker
 
 jobs:
   pre_job:
