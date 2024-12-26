@@ -17,7 +17,7 @@ You can create your own Podracing Landing Locations by modifying the `PodracingT
 The format is as follows:
 ```json
 {
-    "id": "WhiteHole", // Unique identifier for the location
+    "id": "WhiteHole", // In-Game identifier for the location
     "name": "White Hole", // Name of the location to be displayed
     "landings": [
     {
@@ -60,6 +60,6 @@ The format is as follows:
 ## Credits
 - I, for coming up with the challenge. Money here: [$$$Ko-fi$$$](https://ko-fi.com/theiterator)
 - Me, for coding the mod. Money here: [$$$Ko-fi$$$](https://ko-fi.com/theiterator)
-
+- The OW Modding Discord for helping out: [The Outer Wilds Modding](https://discord.gg/9vE5aHxcF9)
 ## Installation
-Use the [Outer Wilds Mod Manager](https://outerwildsmods.com/mod-manager) to install the mod.
+Use the [Outer Wilds Mod Manager](https://outerwildsmods.com/mods/podracingtracker) to install the mod.
