@@ -3,6 +3,7 @@
     <TargetFramework>net48</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Copyright>Copyright © 2024 TheIterator</Copyright>
+    <RootNamespace>PodracingTracker</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -23,8 +24,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PodracingTracker.csproj.user" />
-    <EmbeddedResource Include="rules/PodracingLandings.json" />
-    <EmbeddedResource Include="rules/PodracingAnyLandings.json" />
+    <EmbeddedResource Include="Content/Rules/PodracingLandings.json">
+      <LogicalName>PodracingTracker.rules.PodracingLandings.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content/Rules/PodracingAnyLandings.json">
+      <LogicalName>PodracingTracker.rules.PodracingAnyLandings.json</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

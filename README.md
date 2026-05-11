@@ -13,7 +13,7 @@ Final score is printed into the path: `Documents\PodracingTracker\PTScore_<date>
 
 Code is a bit of a mess, and this version is not the most efficient, but it works for now. If enough people are interested in the mod, I will work on it more.
 
-You can create your own Podracing Landing Locations by modifying the `PodracingTracker\rules\PodracingLandings.json` file. List of compatible entry ids is in the `PodracingTracker\misc\ship_log_entries.txt` file. It is technically possible to add modded locations if you know the id of the location, though hasn't been tested yet.
+You can create your own Podracing Landing Locations by modifying the `src\PodracingTracker\Content\Rules\PodracingLandings.json` file. List of compatible entry ids is in the `src\PodracingTracker\misc\ship_log_entries.txt` file. It is technically possible to add modded locations if you know the id of the location, though hasn't been tested yet.
 The format is as follows:
 ```json
 {
