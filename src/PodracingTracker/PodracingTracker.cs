@@ -309,20 +309,21 @@ public class PodracingTracker : ModBehaviour
         RuleManager.IsPodracing.OnPodracingCompleted += OnPodracingCompleted;
         RuleManager.IsPodracing.OnPodracingFailed += OnPodracingFailed;
 
-        if (ModHelper.Config.GetSettingsValue<string>("KoFi? :3") == "Yes kofi? :3")
-        {
-            GUILineManager.SetLine("KoFi", "<color=green>KoFi? :3 - TheIterator</color>", true, Corner.BottomLeft);
-        }
-        else
-        {
-            GUILineManager.RemoveLine("KoFi");
-        }
+        //if (ModHelper.Config.GetSettingsValue<string>("KoFi? :3") == "Yes kofi? :3")
+        //{
+        //    GUILineManager.SetLine("KoFi", "<color=green>KoFi? :3 - TheIterator</color>", true, Corner.BottomLeft);
+        //}
+        //else
+        //{
+        //    GUILineManager.RemoveLine("KoFi");
+        //}
 
     }
     public void OnCompleteSceneLoad(OWScene previousScene, OWScene newScene)
     {
         readyToTrack = false;
         GUILineManager.ClearLines();
+        TrainingSphereOverlay.Clear();
         // Rule B. 3. The run ends one second after waking up in another loop or entering main menu. (The animation time is added to the run)
 
         if (newScene == OWScene.SolarSystem) {
@@ -401,6 +402,50 @@ public class PodracingTracker : ModBehaviour
     private readonly List<string> completedLandings = [];
     private readonly List<string> completedAnyLandings = [];
     private Location nearestLocation = null;
+
+    private bool IsTrainingOverlay() =>
+        ModHelper.Config.GetSettingsValue<string>("Overlay Type") == "Training Overlay";
+
+    private void UpdateNearestLocationAndLandings()
+    {
+        UtilityTools.UpdatePlayerPosition();
+
+        var closestBody = UtilityTools.GetClosestAstroObject(player.transform, LocationManager.GetRelevantLocationsTransforms()) ?? lastClosestBody;
+        if (closestBody == null)
+        {
+            nearestLocation = null;
+            return;
+        }
+
+        if (closestBody != lastClosestBody)
+        {
+            bool isRingWorld = UtilityTools.IdFromAstro(closestBody) == "RingWorld";
+            bool isWithinDistance = Vector3.Distance(player.transform.position, closestBody.transform.position) <= 500;
+
+            if (!isRingWorld || isWithinDistance)
+            {
+                ModHelper.Console.WriteLine($"Closest AstroObject: {UtilityTools.NameFromAstro(closestBody) ?? "Unknown"}", MessageType.Info);
+                GUILineManager.ClearCorner(Corner.CenterLeft);
+                lastClosestBody = closestBody;
+            }
+            else
+            {
+                closestBody = lastClosestBody;
+            }
+        }
+
+        string bodyId = UtilityTools.playerInMaze == null ? UtilityTools.IdFromAstro(closestBody) : "DarkBramble";
+        nearestLocation = LocationManager.GetLocationById(bodyId);
+        LocationManager.GatherDistances(nearestLocation);
+        if (nearestLocation == null)
+            return;
+
+        landingResults = nearestLocation.DisplayLocation();
+
+        RuleManager.IsPodracing.score = $"L{completedLandings.Count:00}, T{RuleManager.IsPodracing.podracingTime.ToString("00:00.000", CultureInfo.InvariantCulture)}";
+        GUILineManager.SetLine("completedLandings", $"<b><color=green>{string.Join("\n", completedLandings)}</color></b>", true, Corner.CenterRight);
+    }
+
     public void Update()
     {
         if (!isInitialized)
@@ -411,47 +456,18 @@ public class PodracingTracker : ModBehaviour
 
         if (!readyToTrack)
             return;
-        //Process location related data
-        if (UtilityTools.IsPlayerMoving() && RuleManager.IsPodracing.isPodracing) // Only update the closest body if the player is moving
-        {
-            UtilityTools.UpdatePlayerPosition();
 
-            var closestBody = UtilityTools.GetClosestAstroObject(player.transform, LocationManager.GetRelevantLocationsTransforms()) ?? lastClosestBody;
-            if (closestBody == null)
-                {return;}
+        bool podracing = RuleManager.IsPodracing.isPodracing;
+        bool refreshLocations = podracing && (UtilityTools.IsPlayerMoving() || IsTrainingOverlay());
+        if (refreshLocations)
+            UpdateNearestLocationAndLandings();
 
-            if (closestBody != lastClosestBody)
-            {
-                // The Stranger is an exception, it needs to be at most 500 units away to show up
-                bool isRingWorld = UtilityTools.IdFromAstro(closestBody) == "RingWorld";
-                bool isWithinDistance = Vector3.Distance(player.transform.position, closestBody.transform.position) <= 500;
+        bool pauseOpen = PauseMenuManager != null && PauseMenuManager.IsOpen();
+        if (pauseOpen || !IsTrainingOverlay() || !podracing || nearestLocation == null)
+            TrainingSphereOverlay.Clear();
+        else
+            TrainingSphereOverlay.Sync(nearestLocation);
 
-                if (!isRingWorld || isWithinDistance)
-                {
-                    ModHelper.Console.WriteLine($"Closest AstroObject: {UtilityTools.NameFromAstro(closestBody) ?? "Unknown"}", MessageType.Info);
-                    GUILineManager.ClearCorner(Corner.CenterLeft); // Clear the previous data
-                    lastClosestBody = closestBody;
-                }
-                else
-                {
-                    closestBody = lastClosestBody;
-                }
-            }
-            // Get all distances for the closest AstroObject
-            string bodyId = UtilityTools.playerInMaze == null ? UtilityTools.IdFromAstro(closestBody) : "DarkBramble";
-            // Get all landings for the closest AstroObject
-            nearestLocation = LocationManager.GetLocationById(bodyId);
-            LocationManager.GatherDistances(nearestLocation);
-            if (nearestLocation == null)
-                {return;}
-
-            //TodoLandings: Displayed on the right, DoneLandings: Displayed on the left
-            landingResults = nearestLocation.DisplayLocation();
-
-            // Track landed locations
-            RuleManager.IsPodracing.score = $"L{completedLandings.Count:00}, T{RuleManager.IsPodracing.podracingTime.ToString("00:00.000", CultureInfo.InvariantCulture)}";
-            GUILineManager.SetLine("completedLandings", $"<b><color=green>{string.Join("\n", completedLandings)}</color></b>", true, Corner.CenterRight);
-        }
         //Debug();
     }
 
@@ -502,6 +518,7 @@ public class PodracingTracker : ModBehaviour
     public void OnPodracingStarted() {
         ModHelper.Console.WriteLine("Podracing Started", MessageType.Info);
         GUILineManager.ClearLines();
+        TrainingSphereOverlay.Clear();
         LocationManager.ClearLandingState();
         completedLandings.Clear();
         completedAnyLandings.Clear();
@@ -513,6 +530,7 @@ public class PodracingTracker : ModBehaviour
     public void OnPodracingCompleted() {
         ModHelper.Console.WriteLine("Podracing Completed", MessageType.Info);
         GUILineManager.ClearLines();
+        TrainingSphereOverlay.Clear();
         GUILineManager.SetLine("score", $"Final score: {RuleManager.IsPodracing.score}", true, Corner.CenterRight);
         foreach (string landing in completedLandings)
         {
@@ -542,6 +560,7 @@ public class PodracingTracker : ModBehaviour
     public void OnPodracingFailed() {
         ModHelper.Console.WriteLine("Podracing Failed", MessageType.Info);
         GUILineManager.ClearLines();
+        TrainingSphereOverlay.Clear();
         LocationManager.ClearLandingState();
         completedLandings.Clear();
         completedAnyLandings.Clear();

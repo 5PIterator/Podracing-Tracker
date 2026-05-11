@@ -41,7 +41,7 @@ namespace PodracingTracker
         public static void Initialize(IModHelper ModHelper)
         {
             LocationManager.ModHelper = ModHelper;
-            showLandingDetails = ModHelper.Config.GetSettingsValue<bool>("Hide Any Requirement");
+            showLandingDetails = ModHelper.Config.GetSettingsValue<bool>("Show Landing Details");
             LoadJson();
         }
 
@@ -377,6 +377,18 @@ namespace PodracingTracker
         public static Dictionary<string, string> GetMazeLandings()
         {
             return mazeLandings;
+        }
+
+        public static bool TryGetRequirementTransform(string requirementId, out Transform transform)
+        {
+            transform = null;
+            if (string.IsNullOrEmpty(requirementId))
+                return false;
+            if (relevantLandings != null && relevantLandings.TryGetValue(requirementId, out transform))
+                return true;
+            if (anyLandings != null && anyLandings.TryGetValue(requirementId, out transform))
+                return true;
+            return false;
         }
     }
 

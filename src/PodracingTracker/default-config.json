@@ -2,6 +2,29 @@
   "$schema": "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/config_schema.json",
   "enabled": true,
   "settings": {
+    "Run & score": {
+      "type": "label",
+      "title": "Run & score",
+      "side": "left"
+    },
+    "sep_overlay": {
+      "type": "separator",
+      "dots": true
+    },
+    "Overlay": {
+      "type": "label",
+      "title": "Run information overlay",
+      "side": "left"
+    },
+    "Overlay Type": {
+      "type": "selector",
+      "value": "Screen Overlay",
+      "options": [
+        "Screen Overlay",
+        "Landing Overlay",
+        "Training Overlay"
+      ]
+    },
     "IsPodracing": {
       "type": "selector",
       "value": "Track&Display",
@@ -51,6 +74,15 @@
         "BottomCenter",
         "BottomRight"
       ]
+    },
+    "sep_takeoff": {
+      "type": "separator",
+      "dots": true
+    },
+    "Takeoff & player": {
+      "type": "label",
+      "title": "Takeoff & player state",
+      "side": "left"
     },
     "IsTakeoff": {
       "type": "selector",
@@ -202,6 +234,15 @@
         "BottomRight"
       ]
     },
+    "sep_disqualifiers": {
+      "type": "separator",
+      "dots": true
+    },
+    "Disqualifiers & loop": {
+      "type": "label",
+      "title": "Disqualifiers & loop / meta",
+      "side": "left"
+    },
     "IsLockedOn": {
       "type": "selector",
       "value": "Track&Display",
@@ -327,10 +368,36 @@
         "BottomRight"
       ]
     },
+    "sep_locations": {
+      "type": "separator",
+      "dots": true
+    },
+    "Locations": {
+      "type": "label",
+      "title": "Landing locations UI",
+      "side": "left"
+    },
     "Show Landing Details": false,
+    "sep_output": {
+      "type": "separator",
+      "dots": true
+    },
+    "Score file": {
+      "type": "label",
+      "title": "Score output",
+      "side": "left"
+    },
     "Score Output Directory": "%USERPROFILE%\\Documents\\PodracingTracker",
-    "KoFi? :3":
-    {
+    "sep_other": {
+      "type": "separator",
+      "dots": true
+    },
+    "Other": {
+      "type": "label",
+      "title": "Other",
+      "side": "left"
+    },
+    "KoFi? :3": {
       "type": "selector",
       "value": "Yes kofi? :3",
       "options": [
