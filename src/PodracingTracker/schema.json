@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$docs": { "Hide_In_Nav": true },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["enabled"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema URI for this config file."
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Load this mod when the game starts."
+    },
+    "settings": {
+      "description": "Mod options shown in the OWML / game mod menu.",
+      "$ref": "#/definitions/options"
+    }
+  },
+  "definitions": {
+    "options": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string" },
+          { "type": "boolean" },
+          { "type": "number" },
+          { "$ref": "#/definitions/optionsObject" }
+        ]
+      }
+    },
+    "optionsBase": {
+      "allOf": [
+        {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["label", "separator", "slider", "toggle", "selector", "text", "number"]
+            },
+            "dlcOnly": {
+              "type": "boolean",
+              "description": "Only show this setting when the player owns the relevant DLC."
+            }
+          }
+        }
+      ]
+    },
+    "optionsLabelBase": {
+      "allOf": [
+        { "$ref": "#/definitions/optionsBase" },
+        {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string", "description": "Text shown in the options menu." }
+          }
+        }
+      ]
+    },
+    "optionsInteractiveBase": {
+      "allOf": [
+        { "$ref": "#/definitions/optionsLabelBase" },
+        {
+          "type": "object",
+          "properties": {
+            "tooltip": { "type": "string", "description": "Hint shown on hover." }
+          }
+        }
+      ]
+    },
+    "optionsObject": {
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "label" } } },
+          "then": { "$ref": "#/definitions/optionsLabel" }
+        },
+        {
+          "if": { "properties": { "type": { "const": "separator" } } },
+          "then": { "$ref": "#/definitions/optionsSeparator" }
+        },
+        {
+          "if": { "properties": { "type": { "const": "toggle" } } },
+          "then": { "$ref": "#/definitions/optionsToggle" }
+        },
+        {
+          "if": { "properties": { "type": { "const": "number" } } },
+          "then": { "$ref": "#/definitions/optionsNumber" }
+        },
+        {
+          "if": { "properties": { "type": { "const": "text" } } },
+          "then": { "$ref": "#/definitions/optionsText" }
+        },
+        {
+          "if": { "properties": { "type": { "const": "slider" } } },
+          "then": { "$ref": "#/definitions/optionsSlider" }
+        },
+        {
+          "if": { "properties": { "type": { "const": "selector" } } },
+          "then": { "$ref": "#/definitions/optionsSelector" }
+        }
+      ]
+    },
+    "optionsLabel": {
+      "allOf": [
+        { "$ref": "#/definitions/optionsLabelBase" },
+        {
+          "type": "object",
+          "properties": {
+            "side": {
+              "type": "string",
+              "enum": ["left", "center", "right"],
+              "default": "center",
+              "description": "Horizontal alignment for section labels."
+            }
+          }
+        }
+      ]
+    },
+    "optionsSeparator": {
+      "allOf": [
+        { "$ref": "#/definitions/optionsBase" },
+        {
+          "type": "object",
+          "properties": {
+            "dots": {
+              "type": "boolean",
+              "default": true,
+              "description": "Draw a dotted line instead of a blank gap."
+            }
+          }
+        }
+      ]
+    },
+    "optionsToggle": {
+      "allOf": [
+        { "$ref": "#/definitions/optionsInteractiveBase" },
+        { "type": "object", "properties": { "value": { "type": "boolean" } } }
+      ]
+    },
+    "optionsNumber": {
+      "allOf": [
+        { "$ref": "#/definitions/optionsInteractiveBase" },
+        { "type": "object", "properties": { "value": { "type": "number" } } }
+      ]
+    },
+    "optionsText": {
+      "allOf": [
+        { "$ref": "#/definitions/optionsInteractiveBase" },
+        { "type": "object", "properties": { "value": { "type": "string" } } }
+      ]
+    },
+    "optionsSlider": {
+      "allOf": [
+        { "$ref": "#/definitions/optionsInteractiveBase" },
+        {
+          "type": "object",
+          "required": ["min", "max"],
+          "properties": {
+            "value": { "type": "number" },
+            "min": { "type": "number", "description": "Lower bound of the slider." },
+            "max": { "type": "number", "description": "Upper bound of the slider." }
+          }
+        }
+      ]
+    },
+    "optionsSelector": {
+      "allOf": [
+        { "$ref": "#/definitions/optionsInteractiveBase" },
+        {
+          "type": "object",
+          "required": ["options"],
+          "properties": {
+            "value": { "type": "string" },
+            "options": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Selectable entries for this dropdown."
+            }
+          }
+        }
+      ]
+    }
+  }
+}

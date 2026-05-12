@@ -109,7 +109,7 @@ The Attlerock:
 */
 
 //DONE: Test with tracking the distance between the player and Village
-//  - The tracking will be displayed using the OnGUI method
+//  - The tracking is displayed using uGUI on the HUD / landing canvases
 //DONE: Find a more reliable way to track the distance to locations
 //  - markers are a bust for now, Settled with tracking mazes
 //DONE: Handle exit conditions <-
@@ -135,6 +135,9 @@ public class PodracingTracker : ModBehaviour
     //private PlayerLockOnTargeting playerLockOnTargeting;
     private PlayerCameraController playerCameraController;
     private ShipCockpitUI shipCockpitUI;
+    private PodracingRunCoordinator _runCoordinator;
+    /// <summary>Bit flags for the three overlay host toggles; used to detect OWML menu changes during play.</summary>
+    private int _overlayToggleSignature;
     public static bool isLockedOn = false;
     public static IModHelper modHelper;
     public void Debug()
@@ -293,21 +296,29 @@ public class PodracingTracker : ModBehaviour
         // So you probably don't want to do anything here.
         // Use Start() instead.
     }
+    public override void Configure(IModConfig config)
+    {
+        if (isInitialized && readyToTrack && canvasMarkerManager != null)
+            RebuildGuiLineOverlaysFromSettings();
+        else if (ModHelper != null)
+            _overlayToggleSignature = ComputeOverlayToggleSignature();
+    }
+
     public void Start()
     {
         ModHelper.Console.WriteLine($"{nameof(PodracingTracker)} is loaded!", MessageType.Success);
         modHelper = ModHelper;
+        _runCoordinator = new PodracingRunCoordinator(ModHelper);
 
         new Harmony("TheIterator.PodracingTracker").PatchAll(Assembly.GetExecutingAssembly());
 
         OnCompleteSceneLoad(OWScene.TitleScreen, OWScene.TitleScreen);
 
         LoadManager.OnCompleteSceneLoad += OnCompleteSceneLoad;
-        // connect RuleManager Events
-        RuleManager.IsTakeoff.OnTakeoff += OnTakeoff;
-        RuleManager.IsPodracing.OnPodracingStart += OnPodracingStarted;
-        RuleManager.IsPodracing.OnPodracingCompleted += OnPodracingCompleted;
-        RuleManager.IsPodracing.OnPodracingFailed += OnPodracingFailed;
+        RuleManager.IsTakeoff.OnTakeoff += () => _runCoordinator.OnTakeoff();
+        RuleManager.IsPodracing.OnPodracingStart += () => _runCoordinator.OnPodracingStarted();
+        RuleManager.IsPodracing.OnPodracingCompleted += () => _runCoordinator.OnPodracingCompleted();
+        RuleManager.IsPodracing.OnPodracingFailed += () => _runCoordinator.OnPodracingFailed();
 
         //if (ModHelper.Config.GetSettingsValue<string>("KoFi? :3") == "Yes kofi? :3")
         //{
@@ -366,7 +377,13 @@ public class PodracingTracker : ModBehaviour
         shipCockpitUI = FindObjectOfType<ShipCockpitUI>();
 
         // Initialize the Managers
-        GUILineManager.Initialize(ModHelper);
+        GUILineManager.Initialize(ModHelper, canvasMarkerManager, shipCockpitUI, FindObjectOfType<HUDCanvas>());
+        _overlayToggleSignature = ComputeOverlayToggleSignature();
+        GUILineManager.NewLine(
+            "PodracingTracker.BuildVersion",
+            $"v{ModHelper.Manifest.Version}",
+            isRichText: false,
+            corner: Corner.BottomLeft);
         UtilityTools.Initialize(ModHelper);
         LocationManager.Initialize(ModHelper);
         RuleManager.Initialize(ModHelper,
@@ -397,186 +414,46 @@ public class PodracingTracker : ModBehaviour
         isInitialized = true;
     }
 
-    // Main Update Loop
-    private AstroObject lastClosestBody = null;
-    private readonly List<string> completedLandings = [];
-    private readonly List<string> completedAnyLandings = [];
-    private Location nearestLocation = null;
-
-    private bool IsTrainingOverlay() =>
-        ModHelper.Config.GetSettingsValue<string>("Overlay Type") == "Training Overlay";
-
-    private void UpdateNearestLocationAndLandings()
-    {
-        UtilityTools.UpdatePlayerPosition();
-
-        var closestBody = UtilityTools.GetClosestAstroObject(player.transform, LocationManager.GetRelevantLocationsTransforms()) ?? lastClosestBody;
-        if (closestBody == null)
-        {
-            nearestLocation = null;
-            return;
-        }
-
-        if (closestBody != lastClosestBody)
-        {
-            bool isRingWorld = UtilityTools.IdFromAstro(closestBody) == "RingWorld";
-            bool isWithinDistance = Vector3.Distance(player.transform.position, closestBody.transform.position) <= 500;
-
-            if (!isRingWorld || isWithinDistance)
-            {
-                ModHelper.Console.WriteLine($"Closest AstroObject: {UtilityTools.NameFromAstro(closestBody) ?? "Unknown"}", MessageType.Info);
-                GUILineManager.ClearCorner(Corner.CenterLeft);
-                lastClosestBody = closestBody;
-            }
-            else
-            {
-                closestBody = lastClosestBody;
-            }
-        }
-
-        string bodyId = UtilityTools.playerInMaze == null ? UtilityTools.IdFromAstro(closestBody) : "DarkBramble";
-        nearestLocation = LocationManager.GetLocationById(bodyId);
-        LocationManager.GatherDistances(nearestLocation);
-        if (nearestLocation == null)
-            return;
-
-        landingResults = nearestLocation.DisplayLocation();
-
-        RuleManager.IsPodracing.score = $"L{completedLandings.Count:00}, T{RuleManager.IsPodracing.podracingTime.ToString("00:00.000", CultureInfo.InvariantCulture)}";
-        GUILineManager.SetLine("completedLandings", $"<b><color=green>{string.Join("\n", completedLandings)}</color></b>", true, Corner.CenterRight);
-    }
-
     public void Update()
     {
         if (!isInitialized)
             return;
 
-        // process rule related data
+        GUILineManager.SetOverlaysVisible(PauseMenuManager == null || !PauseMenuManager.IsOpen());
+
+        if (readyToTrack && canvasMarkerManager != null)
+        {
+            int sig = ComputeOverlayToggleSignature();
+            if (sig != _overlayToggleSignature)
+                RebuildGuiLineOverlaysFromSettings();
+        }
+
         RuleManager.UpdateRules(readyToTrack);
 
         if (!readyToTrack)
             return;
 
         bool podracing = RuleManager.IsPodracing.isPodracing;
-        bool refreshLocations = podracing && (UtilityTools.IsPlayerMoving() || IsTrainingOverlay());
+        bool refreshLocations = podracing && (UtilityTools.IsPlayerMoving() || _runCoordinator.IsTrainingOverlay());
         if (refreshLocations)
-            UpdateNearestLocationAndLandings();
+            _runCoordinator.UpdateNearestLocationAndLandings(player);
 
         bool pauseOpen = PauseMenuManager != null && PauseMenuManager.IsOpen();
-        if (pauseOpen || !IsTrainingOverlay() || !podracing || nearestLocation == null)
+        if (pauseOpen || !_runCoordinator.IsTrainingOverlay() || !podracing || _runCoordinator.NearestLocation == null)
             TrainingSphereOverlay.Clear();
         else
-            TrainingSphereOverlay.Sync(nearestLocation);
-
-        //Debug();
+            TrainingSphereOverlay.Sync(_runCoordinator.NearestLocation);
     }
 
-    Dictionary<Landing, bool> landingResults = [];
+    private int ComputeOverlayToggleSignature() =>
+        (ModHelper.Config.GetSettingsValue<bool>("Overlay: Screen HUD") ? 1 : 0)
+        | (ModHelper.Config.GetSettingsValue<bool>("Overlay: Landing monitor") ? 2 : 0)
+        | (ModHelper.Config.GetSettingsValue<bool>("Overlay: Space suit HUD") ? 4 : 0);
 
-    // Events
-    public void OnTakeoff()
+    private void RebuildGuiLineOverlaysFromSettings()
     {
-        // Check if the player has landed in a qualifying location Using landingResults
-        foreach (KeyValuePair<Landing, bool> pair in landingResults)
-        {
-            Landing landing = pair.Key;
-            bool requirementsMet = pair.Value;
-
-            if (requirementsMet) // If the player has landed in a qualifying location, add it to completedLandings and mark it as completed
-            {
-                var anyRequirement = landing.Requirements.FirstOrDefault(req => req.Type == "Any");
-                //ModHelper.Console.WriteLine($"Requirements: {landing.Requirements.Count} Any: {anyRequirement != null}", MessageType.Info);
-                if (anyRequirement != null && !completedAnyLandings.Contains(anyRequirement.Id))
-                {
-                    // if any of the requirements has the type "Any", add the id of the requirement to the completedLandings
-                    while (landing.RequirementsMet) // while the any requirement is met, add the id of the requirement to the completedLandings
-                    {
-                        completedLandings.Add($"{nearestLocation.Name}/{landing.Name}/{anyRequirement.Id}");
-                        completedAnyLandings.Add(anyRequirement.Id);
-                        ModHelper.Console.WriteLine($"Completed landing: {completedLandings.Last()}", MessageType.Info);
-                        LocationManager.RemoveAnyLanding(anyRequirement.Id);
-                        LocationManager.GatherDistances(nearestLocation);
-                    }
-                }
-                else if (anyRequirement == null && !completedLandings.Contains($"{nearestLocation.Name}/{landing.Name}"))
-                {
-                    // otherwise, add the name of the landing to the completedLandings
-                    completedLandings.Add($"{nearestLocation.Name}/{landing.Name}");
-                    ModHelper.Console.WriteLine($"Completed landing: {completedLandings.Last()}", MessageType.Info);
-                    landing.IsLanded = true;
-                }
-            }
-        }
-
-        //ModHelper.Console.WriteLine("Takeoff", MessageType.Info);
-        //RuleManager.IsTakeoff.isTakeoff = true;
-    }
-    /// <summary>
-    /// OnPodracingStarted is called when the player starts a podracing run.
-    /// It clears the completedLandings list.
-    /// </summary>
-    public void OnPodracingStarted() {
-        ModHelper.Console.WriteLine("Podracing Started", MessageType.Info);
-        GUILineManager.ClearLines();
-        TrainingSphereOverlay.Clear();
-        LocationManager.ClearLandingState();
-        completedLandings.Clear();
-        completedAnyLandings.Clear();
-    }
-    /// <summary>
-    /// OnPodracingCompleted is called when the player completes a podracing run.
-    /// It displays the final score and the completed landings.
-    /// </summary>
-    public void OnPodracingCompleted() {
-        ModHelper.Console.WriteLine("Podracing Completed", MessageType.Info);
-        GUILineManager.ClearLines();
-        TrainingSphereOverlay.Clear();
-        GUILineManager.SetLine("score", $"Final score: {RuleManager.IsPodracing.score}", true, Corner.CenterRight);
-        foreach (string landing in completedLandings)
-        {
-            GUILineManager.SetLine(landing, $"<color=green>{landing}</color>", true, Corner.CenterRight);
-        }
-
-        // print the completed landings into a document
-        string path = ModHelper.Config.GetSettingsValue<string>("Score Output Directory");
-        path = Environment.ExpandEnvironmentVariables(path);
-        if (!Directory.Exists(path)) {
-            Directory.CreateDirectory(path);
-        }
-
-        path = Path.Combine(path, $"PTScore_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt");
-        using StreamWriter sw = new(path);
-        sw.WriteLine($"Final score: {RuleManager.IsPodracing.score}");
-        foreach (string landing in completedLandings)
-        {
-            sw.WriteLine(landing);
-        }
-        ModHelper.Console.WriteLine($"Score saved to {path}", MessageType.Info);
-    }
-    /// <summary>
-    /// OnPodracingFailed is called when the player fails a podracing run.
-    /// It displays all the violated rules.
-    /// </summary>
-    public void OnPodracingFailed() {
-        ModHelper.Console.WriteLine("Podracing Failed", MessageType.Info);
-        GUILineManager.ClearLines();
-        TrainingSphereOverlay.Clear();
-        LocationManager.ClearLandingState();
-        completedLandings.Clear();
-        completedAnyLandings.Clear();
-    }
-    /*public void OnConfigChanged() {
-        ModHelper.Console.WriteLine("Config Changed", MessageType.Info);
-        GUILineManager.ClearLines();
-        RuleManager.InitializeRules();
-    }*/
-    public void OnGUI()
-    {
-        if (PauseMenuManager != null && PauseMenuManager.IsOpen())
-        {
-            return;
-        }
-        GUILineManager.OnGUI();
+        GUILineManager.Initialize(ModHelper, canvasMarkerManager, shipCockpitUI, FindObjectOfType<HUDCanvas>());
+        _overlayToggleSignature = ComputeOverlayToggleSignature();
     }
 }
 // List of ShipLogEntryLocation IDs

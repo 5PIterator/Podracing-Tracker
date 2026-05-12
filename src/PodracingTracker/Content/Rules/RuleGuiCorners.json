@@ -1,0 +1,15 @@
+{
+  "IsPodracing": "TopRight",
+  "IsPodracingExit": "TopLeft",
+  "IsTakeoff": "TopRight",
+  "IsPlayerDead": "TopLeft",
+  "IsPlayerGrounded": "TopRight",
+  "IsPlayerPilotingShip": "TopLeft",
+  "IsPlayerWearingSuit": "TopLeft",
+  "IsRunShipless": "TopLeft",
+  "IsLockedOn": "CenterRight",
+  "IsMarked": "CenterRight",
+  "IsNewExpedition": "CenterRight",
+  "IsTitleScreen": "CenterRight",
+  "IsModified": "CenterRight"
+}

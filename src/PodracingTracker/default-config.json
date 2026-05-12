@@ -2,408 +2,133 @@
   "$schema": "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/config_schema.json",
   "enabled": true,
   "settings": {
-    "Run & score": {
-      "type": "label",
-      "title": "Run & score",
-      "side": "left"
+    "Overlay": { "type": "label", "title": "Overlay", "side": "left" },
+    "Overlay: Screen HUD": {
+      "type": "toggle",
+      "title": "Main HUD",
+      "tooltip": "Podracing information displayed on the main HUD.",
+      "value": true
     },
-    "sep_overlay": {
-      "type": "separator",
-      "dots": true
+    "Overlay: Landing monitor": {
+      "type": "toggle",
+      "title": "Landing monitor",
+      "tooltip": "Podracing information displayed on the landing monitor.",
+      "value": false
     },
-    "Overlay": {
-      "type": "label",
-      "title": "Run information overlay",
-      "side": "left"
+    "Overlay: Space suit HUD": {
+      "type": "toggle",
+      "title": "Suit HUD",
+      "tooltip": "Podracing information displayed on the space suit HUD.",
+      "value": false
     },
-    "Overlay Type": {
-      "type": "selector",
-      "value": "Screen Overlay",
-      "options": [
-        "Screen Overlay",
-        "Landing Overlay",
-        "Training Overlay"
-      ]
+    "Training overlay": {
+      "type": "toggle",
+      "title": "Training spheres",
+      "tooltip": "Sphere markers at landings while podracing (practice only).",
+      "value": false
     },
+    "Run & score": { "type": "label", "title": "Run & score", "side": "left" },
+    "sep_overlay": { "type": "separator", "dots": true },
     "IsPodracing": {
       "type": "selector",
+      "title": "Podracing",
       "value": "Track&Display",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
-    },
-    "IsPodracing Gui": {
-      "type": "selector",
-      "value": "TopRight",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
     "IsPodracingExit": {
       "type": "selector",
+      "title": "Podracing exit",
       "value": "Track",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
-    "IsPodracingExit Gui": {
-      "type": "selector",
-      "value": "TopLeft",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
-    },
-    "sep_takeoff": {
-      "type": "separator",
-      "dots": true
-    },
-    "Takeoff & player": {
-      "type": "label",
-      "title": "Takeoff & player state",
-      "side": "left"
-    },
+    "sep_takeoff": { "type": "separator", "dots": true },
+    "Takeoff & player": { "type": "label", "title": "Takeoff & player", "side": "left" },
     "IsTakeoff": {
       "type": "selector",
+      "title": "Takeoff (3 contacts)",
       "value": "Track&Display",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
-    },
-    "IsTakeoff Gui": {
-      "type": "selector",
-      "value": "TopRight",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
     "IsPlayerDead": {
       "type": "selector",
+      "title": "Player dead",
       "value": "Track",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
-    },
-    "IsPlayerDead Gui": {
-      "type": "selector",
-      "value": "TopLeft",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
     "IsPlayerGrounded": {
       "type": "selector",
+      "title": "Grounded",
       "value": "Track&Display",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
-    },
-    "IsPlayerGrounded Gui": {
-      "type": "selector",
-      "value": "TopRight",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
     "IsPlayerPilotingShip": {
       "type": "selector",
+      "title": "Piloting ship",
       "value": "Track",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
-    },
-    "IsPlayerPilotingShip Gui": {
-      "type": "selector",
-      "value": "TopLeft",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
     "IsPlayerWearingSuit": {
       "type": "selector",
+      "title": "Wearing suit",
       "value": "Track",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
-    },
-    "IsPlayerWearingSuit Gui": {
-      "type": "selector",
-      "value": "TopLeft",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
     "IsRunShipless": {
       "type": "selector",
+      "title": "Shipless run",
       "value": "Track",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
-    "IsRunShipless Gui": {
-      "type": "selector",
-      "value": "TopLeft",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
-    },
-    "sep_disqualifiers": {
-      "type": "separator",
-      "dots": true
-    },
-    "Disqualifiers & loop": {
-      "type": "label",
-      "title": "Disqualifiers & loop / meta",
-      "side": "left"
-    },
+    "sep_disqualifiers": { "type": "separator", "dots": true },
+    "Disqualifiers & loop": { "type": "label", "title": "Disqualifiers & meta", "side": "left" },
     "IsLockedOn": {
       "type": "selector",
+      "title": "Locked on",
       "value": "Track&Display",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
-    },
-    "IsLockedOn Gui": {
-      "type": "selector",
-      "value": "CenterRight",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
     "IsMarked": {
       "type": "selector",
+      "title": "Marked on HUD",
       "value": "Track&Display",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
-    },
-    "IsMarked Gui": {
-      "type": "selector",
-      "value": "CenterRight",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
     "IsNewExpedition": {
       "type": "selector",
+      "title": "New expedition",
       "value": "Track&Display",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
-    },
-    "IsNewExpedition Gui": {
-      "type": "selector",
-      "value": "CenterRight",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
     "IsTitleScreen": {
       "type": "selector",
+      "title": "Title screen",
       "value": "Track&Display",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
-    },
-    "IsTitleScreen Gui": {
-      "type": "selector",
-      "value": "CenterRight",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
     "IsModified": {
       "type": "selector",
+      "title": "Modified save",
       "value": "Track&Display",
-      "options": [
-        "Track",
-        "Display",
-        "Track&Display",
-        "Disabled"
-      ]
+      "options": ["Track", "Display", "Track&Display", "Disabled"]
     },
-    "IsModified Gui": {
-      "type": "selector",
-      "value": "CenterRight",
-      "options": [
-        "TopLeft",
-        "TopCenter",
-        "TopRight",
-        "CenterLeft",
-        "Center",
-        "CenterRight",
-        "BottomLeft",
-        "BottomCenter",
-        "BottomRight"
-      ]
+    "sep_locations": { "type": "separator", "dots": true },
+    "Locations": { "type": "label", "title": "Landings", "side": "left" },
+    "Show Landing Details": {
+      "type": "toggle",
+      "title": "Landing details",
+      "tooltip": "Extra landing / distance readouts in the overlay.",
+      "value": false
     },
-    "sep_locations": {
-      "type": "separator",
-      "dots": true
-    },
-    "Locations": {
-      "type": "label",
-      "title": "Landing locations UI",
-      "side": "left"
-    },
-    "Show Landing Details": false,
-    "sep_output": {
-      "type": "separator",
-      "dots": true
-    },
-    "Score file": {
-      "type": "label",
-      "title": "Score output",
-      "side": "left"
-    },
+    "sep_output": { "type": "separator", "dots": true },
+    "Score file": { "type": "label", "title": "Score file", "side": "left" },
     "Score Output Directory": "%USERPROFILE%\\Documents\\PodracingTracker",
-    "sep_other": {
-      "type": "separator",
-      "dots": true
-    },
-    "Other": {
-      "type": "label",
-      "title": "Other",
-      "side": "left"
-    },
+    "sep_other": { "type": "separator", "dots": true },
+    "Other": { "type": "label", "title": "Other", "side": "left" },
     "KoFi? :3": {
       "type": "selector",
+      "title": "Ko-fi prompt",
       "value": "Yes kofi? :3",
-      "options": [
-        "Yes kofi? :3",
-        "No Kofi ;_;"
-      ]
+      "options": ["Yes kofi? :3", "No Kofi ;_;"]
     }
   }
 }
