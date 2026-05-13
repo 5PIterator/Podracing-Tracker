@@ -6,7 +6,7 @@ Podracing is a challenge in Outer Wilds revolving around flying around the Solar
 The Podracing Tracker modification is then a mod specifically designed to track the score and rules of Podracing.
 
 You can find the specific rules of the challenge here: [Now This Is Podracing!](https://docs.google.com/spreadsheets/d/1Bg4JSZbgrWFhUh_O9f2fur0on2GWKHVNhJipSkRYD-I/edit?gid=0#gid=0)
-There are a lot of rules to keep track of, which is why there is a need for this modification to keep things manageable. Still, I recommend reading the rules so that you don't wonder why is your run disqualified.
+There are a lot of rules to keep track of, which is why there is a need for this modification to keep things manageable. Still, I recommend reading the rules so that you don't wonder why is your run disqualified. For first training runs, I recommend turning on all the overlays in the settings of the mod. This should help you understand how all of this works in-game.
 
 Currently, the mod is in a very early stage of development, issues and bugs are expected. If you find any, please report them in the issues tab of GitHub repository.
 
