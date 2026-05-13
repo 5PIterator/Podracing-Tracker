@@ -4,7 +4,7 @@
   "author": "TheIterator",
   "name": "PodracingTracker",
   "uniqueName": "TheIterator.PodracingTracker",
-  "version": "0.1.1e",
+  "version": "0.2.0",
   "owmlVersion": "2.14.0",
   "dependencies": []
 }
