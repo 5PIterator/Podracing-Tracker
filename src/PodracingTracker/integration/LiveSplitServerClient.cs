@@ -97,22 +97,17 @@ public sealed class LiveSplitServerClient : IDisposable
         Disconnect();
     }
 
-    private bool CanSend()
-    {
-        if (!_modHelper.Config.GetSettingsValue<bool>("LiveSplit Enabled"))
-            return false;
-        return _modHelper.Config.GetSettingsValue<bool>("LiveSplit Auto Connect");
-    }
+    private bool CanSend() => _modHelper.Config.GetSettingsValue<bool>("LiveSplit Enabled");
 
     private bool VerboseLogging() => _modHelper.Config.GetSettingsValue<bool>("LiveSplit Verbose Logs");
 
     /// <summary>
     /// Sends <c>setsplitname</c> for indices <c>0 .. PodracingBundledSplitCount-1</c>.
-    /// Config <c>LiveSplit Wipe Split Names At Start</c>: default <c>""</c> clears each segment name; any other value is used as the name for every segment.
+    /// Config <c>LiveSplit Wipe Splits</c>: default <c>""</c> clears each segment name; any other value is used as the name for every segment.
     /// </summary>
     private void ApplyStartSplitNameWipe()
     {
-        string wipe = _modHelper.Config.GetSettingsValue<string>("LiveSplit Wipe Split Names At Start") ?? string.Empty;
+        string wipe = _modHelper.Config.GetSettingsValue<string>("LiveSplit Wipe Splits") ?? string.Empty;
         for (int i = 0; i < PodracingBundledSplitCount; i++)
         {
             if (string.IsNullOrEmpty(wipe))

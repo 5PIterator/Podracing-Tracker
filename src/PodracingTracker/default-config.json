@@ -32,7 +32,7 @@
     "LiveSplit Enabled": {
       "type": "toggle",
       "title": "LiveSplit integration",
-      "tooltip": "Send timer commands to LiveSplit Server over TCP when podracing events occur.",
+      "tooltip": "Connect to LiveSplit Server over TCP and send timer commands when podracing events occur.",
       "value": false
     },
     "LiveSplit Host": {
@@ -46,12 +46,6 @@
       "title": "LiveSplit port",
       "tooltip": "TCP port from LiveSplit → Control → Start Server (default 16834).",
       "value": 16834
-    },
-    "LiveSplit Auto Connect": {
-      "type": "toggle",
-      "title": "LiveSplit auto connect",
-      "tooltip": "If off, the mod will not open a TCP connection or send commands (no warnings if LiveSplit is closed).",
-      "value": true
     },
     "LiveSplit Verbose Logs": {
       "type": "toggle",

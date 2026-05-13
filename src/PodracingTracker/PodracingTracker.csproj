@@ -24,14 +24,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content/Rules/PodracingLandings.json">
-      <LogicalName>PodracingTracker.rules.PodracingLandings.json</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content/Rules/PodracingAnyLandings.json">
-      <LogicalName>PodracingTracker.rules.PodracingAnyLandings.json</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content/Rules/RuleGuiCorners.json">
-      <LogicalName>PodracingTracker.rules.RuleGuiCorners.json</LogicalName>
-    </EmbeddedResource>
+    <None Include="Content\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

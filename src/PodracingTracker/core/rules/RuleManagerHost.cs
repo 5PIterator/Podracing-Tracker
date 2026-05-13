@@ -1,5 +1,4 @@
 using System.IO;
-using System.Reflection;
 using Newtonsoft.Json;
 using OWML.Common;
 using OWML.ModHelper;
@@ -58,11 +57,8 @@ public partial class RuleManager
 
     private static Dictionary<string, string> LoadRuleGuiCorners()
     {
-        const string resourceName = "PodracingTracker.rules.RuleGuiCorners.json";
-        var assembly = Assembly.GetExecutingAssembly();
-        using Stream stream = assembly.GetManifestResourceStream(resourceName)
-            ?? throw new InvalidOperationException($"Missing embedded resource '{resourceName}'.");
-        using var reader = new StreamReader(stream);
+        string path = ModContentPaths.RuleFile("RuleGuiCorners.json");
+        using var reader = File.OpenText(path);
         var map = JsonConvert.DeserializeObject<Dictionary<string, string>>(reader.ReadToEnd())
             ?? throw new InvalidOperationException("RuleGuiCorners.json deserialized to null.");
         return map;

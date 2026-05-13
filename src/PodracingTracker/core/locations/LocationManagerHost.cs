@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using Newtonsoft.Json;
 using OWML.Common;
 using OWML.ModHelper;
@@ -43,26 +42,21 @@ namespace PodracingTracker
         {
             try
             {
-                var assembly = Assembly.GetExecutingAssembly();
-                var jsonLandings = "PodracingTracker.rules.PodracingLandings.json";
-                var jsonAnyLandings = "PodracingTracker.rules.PodracingAnyLandings.json";
+                string pathLandings = ModContentPaths.RuleFile("PodracingLandings.json");
+                string pathAny = ModContentPaths.RuleFile("PodracingAnyLandings.json");
 
-                using (Stream stream = assembly.GetManifestResourceStream(jsonLandings))
-                using (StreamReader reader = new StreamReader(stream))
+                using (StreamReader reader = File.OpenText(pathLandings))
                 {
-                    var jsonData = reader.ReadToEnd();
-                    var podRacingLandings = JsonConvert.DeserializeObject<PodracingLandings>(jsonData);
+                    var podRacingLandings = JsonConvert.DeserializeObject<PodracingLandings>(reader.ReadToEnd());
                     locations = podRacingLandings.Locations;
-                    ModHelper.Console.WriteLine("JSON file loaded successfully");
+                    ModHelper.Console.WriteLine("PodracingLandings.json loaded successfully");
                 }
 
-                using (Stream stream = assembly.GetManifestResourceStream(jsonAnyLandings))
-                using (StreamReader reader = new StreamReader(stream))
+                using (StreamReader reader = File.OpenText(pathAny))
                 {
-                    var jsonData = reader.ReadToEnd();
-                    var podracingAnyLandings = JsonConvert.DeserializeObject<PodracingAnyLandings>(jsonData);
+                    var podracingAnyLandings = JsonConvert.DeserializeObject<PodracingAnyLandings>(reader.ReadToEnd());
                     anyLandingsIds = podracingAnyLandings.AnyLandings;
-                    ModHelper.Console.WriteLine("JSON file loaded successfully");
+                    ModHelper.Console.WriteLine("PodracingAnyLandings.json loaded successfully");
                 }
             }
             catch (Exception ex)

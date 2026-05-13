@@ -7,7 +7,7 @@ The Podracing Tracker modification is then a mod specifically designed to track 
 You can find the specific rules of the challenge here: [Now This Is Podracing!](https://docs.google.com/spreadsheets/d/1Bg4JSZbgrWFhUh_O9f2fur0on2GWKHVNhJipSkRYD-I/edit?gid=0#gid=0)
 
 ## Features
-Currently, the mod is in a very early stage of development, issues and bugs are expected. If you find any, please report them in the issues tab of this repository.
+Currently, the mod is in a very early stage of development, issues and bugs are expected. If you find any, please report them in the issues tab of GitHub repository.
 You may toggle some of the rules and where they are displayed on the screen, though the functionality hasn't been fully tested or implemented yet.
 Final score is printed into the path: `Documents\PodracingTracker\PTScore_<date>.txt`. Which can be changed in the settings of the mod.
 
