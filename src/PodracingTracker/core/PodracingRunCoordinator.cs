@@ -15,16 +15,22 @@ namespace PodracingTracker;
 public sealed class PodracingRunCoordinator
 {
     private readonly IModHelper _modHelper;
-
+    private readonly LiveSplitServerClient _liveSplit;
+    private bool _liveSplitRunActive;
     private AstroObject _lastClosestBody;
     private readonly List<string> _completedLandings = [];
     private readonly List<string> _completedAnyLandings = [];
     private Location _nearestLocation;
     private Dictionary<Landing, bool> _landingResults = [];
 
-    public PodracingRunCoordinator(IModHelper modHelper)
+    public PodracingRunCoordinator(IModHelper modHelper, LiveSplitServerClient liveSplit)
     {
         _modHelper = modHelper;
+        _liveSplit = liveSplit;
+        RuleManager.IsTakeoff.OnTakeoff += OnTakeoff;
+        RuleManager.IsPodracing.OnPodracingStart += OnPodracingStarted;
+        RuleManager.IsPodracing.OnPodracingCompleted += OnPodracingCompleted;
+        RuleManager.IsPodracing.OnPodracingFailed += OnPodracingFailed;
     }
 
     public Location NearestLocation => _nearestLocation;
@@ -32,7 +38,7 @@ public sealed class PodracingRunCoordinator
     public bool IsTrainingOverlay() =>
         _modHelper.Config.GetSettingsValue<bool>("Training overlay");
 
-    public void UpdateNearestLocationAndLandings(PlayerBody player)
+    public void UpdateNearestLocation(PlayerBody player)
     {
         UtilityTools.UpdatePlayerPosition();
 
@@ -72,8 +78,12 @@ public sealed class PodracingRunCoordinator
         GUILineManager.SetLine("completedLandings", $"<b><color=green>{string.Join("\n", _completedLandings)}</color></b>", true, Corner.CenterRight);
     }
 
+    /// <summary>
+    /// Applies qualifying takeoffs against current landing results and returns landing labels completed during this takeoff event.
+    /// </summary>
     public void OnTakeoff()
     {
+        List<string> completedThisTakeoff = [];
         foreach (KeyValuePair<Landing, bool> pair in _landingResults)
         {
             Landing landing = pair.Key;
@@ -87,20 +97,27 @@ public sealed class PodracingRunCoordinator
             {
                 while (landing.RequirementsMet)
                 {
-                    _completedLandings.Add($"{_nearestLocation.Name}/{landing.Name}/{anyRequirement.Id}");
+                    string label = $"{_nearestLocation.Name}/{landing.Name}/{anyRequirement.Id}";
+                    _completedLandings.Add(label);
+                    completedThisTakeoff.Add(label);
                     _completedAnyLandings.Add(anyRequirement.Id);
-                    _modHelper.Console.WriteLine($"Completed landing: {_completedLandings[_completedLandings.Count - 1]}", MessageType.Info);
+                    _modHelper.Console.WriteLine($"Completed landing: {label}", MessageType.Info);
                     LocationManager.RemoveAnyLanding(anyRequirement.Id);
                     LocationManager.GatherDistances(_nearestLocation);
                 }
             }
             else if (anyRequirement == null && !_completedLandings.Contains($"{_nearestLocation.Name}/{landing.Name}"))
             {
-                _completedLandings.Add($"{_nearestLocation.Name}/{landing.Name}");
-                _modHelper.Console.WriteLine($"Completed landing: {_completedLandings[_completedLandings.Count - 1]}", MessageType.Info);
+                string label = $"{_nearestLocation.Name}/{landing.Name}";
+                _completedLandings.Add(label);
+                completedThisTakeoff.Add(label);
+                _modHelper.Console.WriteLine($"Completed landing: {label}", MessageType.Info);
                 landing.IsLanded = true;
             }
         }
+
+        if (RuleManager.IsPodracing.isPodracing)
+            _liveSplit.NotifyTakeoffLandings(completedThisTakeoff);
     }
 
     public void OnPodracingStarted()
@@ -111,10 +128,19 @@ public sealed class PodracingRunCoordinator
         LocationManager.ClearLandingState();
         _completedLandings.Clear();
         _completedAnyLandings.Clear();
+        _liveSplitRunActive = true;
+        _liveSplit.StartRun();
     }
 
     public void OnPodracingCompleted()
     {
+        if (_liveSplitRunActive)
+        {
+            string finalLabel = $"Complete {RuleManager.IsPodracing.score}";
+            _liveSplit.CompleteRun(finalLabel);
+            _liveSplitRunActive = false;
+        }
+
         _modHelper.Console.WriteLine("Podracing Completed", MessageType.Info);
         GUILineManager.ClearLines();
         TrainingSphereOverlay.Clear();
@@ -143,6 +169,12 @@ public sealed class PodracingRunCoordinator
 
     public void OnPodracingFailed()
     {
+        if (_liveSplitRunActive)
+        {
+            _liveSplit.FailRun();
+            _liveSplitRunActive = false;
+        }
+
         _modHelper.Console.WriteLine("Podracing Failed", MessageType.Info);
         GUILineManager.ClearLines();
         TrainingSphereOverlay.Clear();

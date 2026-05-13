@@ -27,6 +27,44 @@
       "tooltip": "Sphere markers at landings while podracing (practice only).",
       "value": false
     },
+    "sep_livesplit": { "type": "separator", "dots": true },
+    "LiveSplit": { "type": "label", "title": "LiveSplit", "side": "left" },
+    "LiveSplit Enabled": {
+      "type": "toggle",
+      "title": "LiveSplit integration",
+      "tooltip": "Send timer commands to LiveSplit Server over TCP when podracing events occur.",
+      "value": false
+    },
+    "LiveSplit Host": {
+      "type": "text",
+      "title": "LiveSplit host",
+      "tooltip": "Hostname or IP for LiveSplit Server (usually 127.0.0.1 on the same PC).",
+      "value": "127.0.0.1"
+    },
+    "LiveSplit Port": {
+      "type": "number",
+      "title": "LiveSplit port",
+      "tooltip": "TCP port from LiveSplit → Control → Start Server (default 16834).",
+      "value": 16834
+    },
+    "LiveSplit Auto Connect": {
+      "type": "toggle",
+      "title": "LiveSplit auto connect",
+      "tooltip": "If off, the mod will not open a TCP connection or send commands (no warnings if LiveSplit is closed).",
+      "value": true
+    },
+    "LiveSplit Verbose Logs": {
+      "type": "toggle",
+      "title": "LiveSplit verbose logs",
+      "tooltip": "Log every LiveSplit Server command sent by the mod.",
+      "value": false
+    },
+    "LiveSplit Wipe Split Names At Start": {
+      "type": "text",
+      "title": "Wipe split names at start",
+      "tooltip": "After reset, rename every segment in the Podracing splits before the timer starts.",
+      "value": ""
+    },
     "Run & score": { "type": "label", "title": "Run & score", "side": "left" },
     "sep_overlay": { "type": "separator", "dots": true },
     "IsPodracing": {

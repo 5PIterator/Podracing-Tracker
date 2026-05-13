@@ -1,9 +1,9 @@
 {
-  "IsPodracing": "TopRight",
-  "IsPodracingExit": "TopLeft",
-  "IsTakeoff": "TopRight",
+  "IsPodracing": "CenterBottom",
+  "IsPodracingExit": "CenterBottom",
+  "IsTakeoff": "CenterBottom",
+  "IsPlayerGrounded": "CenterBottom",
   "IsPlayerDead": "TopLeft",
-  "IsPlayerGrounded": "TopRight",
   "IsPlayerPilotingShip": "TopLeft",
   "IsPlayerWearingSuit": "TopLeft",
   "IsRunShipless": "TopLeft",

@@ -136,6 +136,7 @@ public class PodracingTracker : ModBehaviour
     private PlayerCameraController playerCameraController;
     private ShipCockpitUI shipCockpitUI;
     private PodracingRunCoordinator _runCoordinator;
+    private LiveSplitServerClient _liveSplit;
     /// <summary>Bit flags for the three overlay host toggles; used to detect OWML menu changes during play.</summary>
     private int _overlayToggleSignature;
     public static bool isLockedOn = false;
@@ -156,135 +157,7 @@ public class PodracingTracker : ModBehaviour
 
         //debug
         //IsModified
-
-
-
-        //ModHelper.Console.WriteLine($"Hit: {RuleManager.IsPodracing.hasPodracingExited}");
-        /*GUILineManager.SetLine("isPodracing",
-            $"<color={(RuleManager.IsPodracing.isPodracing ? "green" : "red")}>{RuleManager.IsPodracing.isPodracing}</color>\t - isPodracing",
-            true,
-            Corner.TopLeft
-        );
-        GUILineManager.SetLine("hasPodracingExited",
-            $"<color={(RuleManager.IsPodracing.hasPodracingExited ? "green" : "red")}>{RuleManager.IsPodracing.hasPodracingExited}</color>\t - hasPodracingExited",
-            true,
-            Corner.TopLeft
-        );
-        //debug
-        GUILineManager.SetLine("countFromLoop",
-            $"<color={(RuleManager.IsPodracingExit.loopCountDown ? "green" : "red")}>{RuleManager.IsPodracingExit.loopCountDown}</color>\t - countFromLoop",
-            true,
-            Corner.TopLeft
-        );
-        GUILineManager.SetLine("isPodracingExit",
-            $"<color={(RuleManager.IsPodracingExit.isPodracingExit ? "green" : "red")}>{RuleManager.IsPodracingExit.isPodracingExit}</color>\t - isPodracingExit",
-            true,
-            Corner.TopLeft
-        );
-        GUILineManager.SetLine("exitCountdown",
-            $"<color={(RuleManager.IsPodracingExit.exitCountdown > 0f ? "yellow" : "red")}>{RuleManager.IsPodracingExit.exitCountdown:0.00}</color>\t - exitCountdown",
-            true,
-            Corner.TopLeft
-        );
-        GUILineManager.SetLine("isDisqualified",
-            $"<color={(RuleManager.IsPodracing.isDisqualified ? "green" : "red")}>{RuleManager.IsPodracing.isDisqualified}</color>\t - isDisqualified",
-            true,
-            Corner.TopLeft
-        );*/
-
-        /*if (!debug_triggered)
-        {
-            playerFogWarpDetector = FindObjectOfType<PlayerFogWarpDetector>();
-        }
-        debug_triggered = true;
-
-        if (playerFogWarpDetector == null)
-        {
-            return;
-        }
-        ModHelper.Console.WriteLine("Debugging", MessageType.Info);
-        // _outerWarpVolume
-        GUILineManager.SetLine("Debug1", $"_outerWarpVolume: {playerFogWarpDetector._outerWarpVolume?.GetName()}", true);
-        */
-
-        // print all fog volumes into a file
-        /*string path = @"C:\Users\kryst\Desktop\GitProjects\Outer Wilds\misc\FogVolumes.txt";
-        using (StreamWriter writer = new StreamWriter(path))
-        {
-            foreach (ShipLogEntryLocation location in allEntryLocations)
-            {
-                if (location == null)
-                {
-                    ModHelper.Console.WriteLine("Location is null", MessageType.Warning);
-                    continue;
-                }
-                var entryID = location.GetEntryID();
-                var fogWarpVolume = location.GetOuterFogWarpVolume();
-                var fogWarpVolumeName = fogWarpVolume?.GetName();
-                ModHelper.Console.WriteLine($"Writing: {entryID} - {fogWarpVolumeName}", MessageType.Info);
-                writer.WriteLine($"{entryID} - {fogWarpVolumeName}");
-            }
-        }*/
-
-       /* try
-        {
-            // debug
-            if (marker == null)
-            {
-                // find the DB_VESSEL/TH_VILLAGE
-                string locationId = "TH_NOMAI_MINE";
-                ModHelper.Console.WriteLine($"Debugging: {locationId}", MessageType.Info);
-                ShipLogEntryLocation location = allEntryLocations.FirstOrDefault(entry => entry.GetEntryID() == locationId);
-                if (location == null)
-                {
-                    ModHelper.Console.WriteLine($"Location: {locationId} not found", MessageType.Warning);
-                    return;
-                }
-                else
-                {
-                    ModHelper.Console.WriteLine($"Location: {location.GetEntryID()}", MessageType.Info);
-                }
-                marker = canvasMarkerManager.InstantiateNewMarker(); // Use a method to create or get a CanvasMarker
-                Transform landingTransform = location?.transform;
-                ModHelper.Console.WriteLine($"Marker: {locationId} at {landingTransform?.position}", MessageType.Info);
-
-                // Initialize the marker
-                marker.Init(canvasMarkerManager._canvas);
-                marker.SetMarkerTarget(landingTransform);
-                marker.SetLabel(location.GetEntryID());
-                marker.SetOuterFogWarpVolume(location.GetOuterFogWarpVolume());
-                marker.SetVisibility(true);
-
-                ModHelper.Console.WriteLine($"Marker: {marker.GetMarkerLabelName()} at {marker.GetArrowAnchoredPosition()}", MessageType.Info);
-            }
-            else
-            {
-                // update the marker
-                // GetMarkerLabelName and GetArrowAnchoredPosition
-                GUILineManager.SetLine("Marker1", $"Marker: {marker.GetMarkerLabelName()} at {marker.GetArrowAnchoredPosition()}", true);
-                // GetOuterFogWarpVolume
-                GUILineManager.SetLine("Marker2", $"FogWarpVolume: {marker.GetOuterFogWarpVolume()?.GetName()}", true);
-                // IsVisible
-                GUILineManager.SetLine("Marker3", $"IsVisible: {marker.IsVisible()}", true);
-                // IsVisibleIgnoreFog
-                GUILineManager.SetLine("Marker4", $"IsIgnoreFog: {marker.IsVisibleIgnoreFog()}", true);
-                // GetMarkerDistance
-                GUILineManager.SetLine("Marker5", $"Distance: {marker.GetMarkerDistance()}", true);
-                //.GetWarpDistance
-                GUILineManager.SetLine("Marker6", $"WarpDistance: {marker.GetWarpDistance()}", true);
-                //.GetRawFogMarkerCount
-                GUILineManager.SetLine("Marker7", $"RawFogMarkerCount: {marker.GetRawFogMarkerCount()}", true);
-            }
-        }
-        catch (Exception e)
-        {
-            ModHelper.Console.WriteLine($"Error: {e}", MessageType.Error);
-        }
-        finally
-        {
-            ModHelper.Console.WriteLine("Debugging complete", MessageType.Info);
-        }*/
-}
+    }
 
     // Startup
     public static bool readyToTrack = false;
@@ -298,27 +171,31 @@ public class PodracingTracker : ModBehaviour
     }
     public override void Configure(IModConfig config)
     {
+        _liveSplit?.RefreshFromConfig();
         if (isInitialized && readyToTrack && canvasMarkerManager != null)
             RebuildGuiLineOverlaysFromSettings();
         else if (ModHelper != null)
             _overlayToggleSignature = ComputeOverlayToggleSignature();
     }
 
+    public void OnDestroy()
+    {
+        _liveSplit?.Dispose();
+        _liveSplit = null;
+    }
+
     public void Start()
     {
         ModHelper.Console.WriteLine($"{nameof(PodracingTracker)} is loaded!", MessageType.Success);
         modHelper = ModHelper;
-        _runCoordinator = new PodracingRunCoordinator(ModHelper);
+        _liveSplit = new LiveSplitServerClient(ModHelper);
+        _runCoordinator = new PodracingRunCoordinator(ModHelper, _liveSplit);
 
         new Harmony("TheIterator.PodracingTracker").PatchAll(Assembly.GetExecutingAssembly());
 
         OnCompleteSceneLoad(OWScene.TitleScreen, OWScene.TitleScreen);
 
         LoadManager.OnCompleteSceneLoad += OnCompleteSceneLoad;
-        RuleManager.IsTakeoff.OnTakeoff += () => _runCoordinator.OnTakeoff();
-        RuleManager.IsPodracing.OnPodracingStart += () => _runCoordinator.OnPodracingStarted();
-        RuleManager.IsPodracing.OnPodracingCompleted += () => _runCoordinator.OnPodracingCompleted();
-        RuleManager.IsPodracing.OnPodracingFailed += () => _runCoordinator.OnPodracingFailed();
 
         //if (ModHelper.Config.GetSettingsValue<string>("KoFi? :3") == "Yes kofi? :3")
         //{
@@ -333,6 +210,7 @@ public class PodracingTracker : ModBehaviour
     public void OnCompleteSceneLoad(OWScene previousScene, OWScene newScene)
     {
         readyToTrack = false;
+        _liveSplit?.RefreshFromConfig();
         GUILineManager.ClearLines();
         TrainingSphereOverlay.Clear();
         // Rule B. 3. The run ends one second after waking up in another loop or entering main menu. (The animation time is added to the run)
@@ -436,7 +314,7 @@ public class PodracingTracker : ModBehaviour
         bool podracing = RuleManager.IsPodracing.isPodracing;
         bool refreshLocations = podracing && (UtilityTools.IsPlayerMoving() || _runCoordinator.IsTrainingOverlay());
         if (refreshLocations)
-            _runCoordinator.UpdateNearestLocationAndLandings(player);
+            _runCoordinator.UpdateNearestLocation(player);
 
         bool pauseOpen = PauseMenuManager != null && PauseMenuManager.IsOpen();
         if (pauseOpen || !_runCoordinator.IsTrainingOverlay() || !podracing || _runCoordinator.NearestLocation == null)

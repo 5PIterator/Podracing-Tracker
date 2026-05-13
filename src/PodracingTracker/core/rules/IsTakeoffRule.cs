@@ -27,9 +27,13 @@ public partial class RuleManager
         public static float takeoffTime = 0f;
         public static float startTakeoffTime = 0f;
 
+        /// <summary>True if the previous <see cref="Update"/> saw <see cref="isTakeoff"/>; used to raise <see cref="OnTakeoff"/> once per pulse.</summary>
+        private static bool _takeoffActiveLastFrame;
+
         public override void Initialize()
         {
             isTakeoff = false;
+            _takeoffActiveLastFrame = false;
             touchdown = false;
             contactCount = 0;
             takeoffPrimed = false;
@@ -106,8 +110,11 @@ public partial class RuleManager
                 ignitionStart = false;
                 ignitionCancel = false;
                 ignitionComplete = false;
-                OnTakeoff?.Invoke();
+                if (!_takeoffActiveLastFrame)
+                    OnTakeoff?.Invoke();
             }
+
+            _takeoffActiveLastFrame = isTakeoff;
         }
 
         public override void Display()
