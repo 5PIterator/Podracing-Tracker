@@ -53,10 +53,18 @@
       "tooltip": "Log every LiveSplit Server command sent by the mod.",
       "value": false
     },
+    "LiveSplit Wipe Split Count": {
+      "type": "number",
+      "title": "Wipe split count",
+      "tooltip": "Wipe count for the Podracing splits.",
+      "value": 25,
+      "min": 0,
+      "max": 500
+    },
     "LiveSplit Wipe Splits": {
       "type": "text",
       "title": "Wipe splits at start",
-      "tooltip": "After reset, rename every segment in the Podracing splits before the timer starts.",
+      "tooltip": "Label used when wiping the splits at start.",
       "value": ""
     },
     "Run & score": { "type": "label", "title": "Run & score", "side": "left" },

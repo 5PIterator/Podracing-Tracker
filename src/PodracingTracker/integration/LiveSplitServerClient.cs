@@ -15,9 +15,7 @@ namespace PodracingTracker;
 public sealed class LiveSplitServerClient : IDisposable
 {
     private const int ConnectTimeoutMilliseconds = 1500;
-
-    /// <summary>Segment count in <c>Content/Rules/Outer Wilds - Podracing.lss</c> (must match splits open in LiveSplit).</summary>
-    private const int PodracingBundledSplitCount = 25;
+    private const int MaxWipeSplitCountAllowed = 500;
 
     private readonly IModHelper _modHelper;
     private TcpClient _tcp;
@@ -39,7 +37,7 @@ public sealed class LiveSplitServerClient : IDisposable
     }
 
     /// <summary>
-    /// <c>reset</c>, optional bulk <c>setsplitname</c> for Podracing segment count, then <c>starttimer</c>.
+    /// <c>reset</c>, optional bulk <c>setsplitname</c> per mod settings, then <c>starttimer</c>.
     /// </summary>
     public void StartRun()
     {
@@ -102,13 +100,19 @@ public sealed class LiveSplitServerClient : IDisposable
     private bool VerboseLogging() => _modHelper.Config.GetSettingsValue<bool>("LiveSplit Verbose Logs");
 
     /// <summary>
-    /// Sends <c>setsplitname</c> for indices <c>0 .. PodracingBundledSplitCount-1</c>.
-    /// Config <c>LiveSplit Wipe Splits</c>: default <c>""</c> clears each segment name; any other value is used as the name for every segment.
+    /// Sends <c>setsplitname</c> for indices <c>0</c> .. <c>count - 1</c> where <c>count</c> comes from <c>LiveSplit Wipe Split Count</c> (clamped).
+    /// <c>LiveSplit Wipe Splits</c>: empty clears each segment name in range; non-empty uses that label for each index.
     /// </summary>
     private void ApplyStartSplitNameWipe()
     {
+        int count = _modHelper.Config.GetSettingsValue<int>("LiveSplit Wipe Split Count");
+        if (count < 0)
+            count = 0;
+        if (count > MaxWipeSplitCountAllowed)
+            count = MaxWipeSplitCountAllowed;
+
         string wipe = _modHelper.Config.GetSettingsValue<string>("LiveSplit Wipe Splits") ?? string.Empty;
-        for (int i = 0; i < PodracingBundledSplitCount; i++)
+        for (int i = 0; i < count; i++)
         {
             if (string.IsNullOrEmpty(wipe))
                 SendLine($"setsplitname {i} ");
