@@ -17,7 +17,7 @@
     },
     "Overlay: Space suit HUD": {
       "type": "toggle",
-      "title": "Suit HUD",
+      "title": "Suit HUD (WIP)",
       "tooltip": "Podracing information displayed on the space suit HUD.",
       "value": false
     },
@@ -59,9 +59,9 @@
       "tooltip": "Log every LiveSplit Server command sent by the mod.",
       "value": false
     },
-    "LiveSplit Wipe Split Names At Start": {
+    "LiveSplit Wipe Splits": {
       "type": "text",
-      "title": "Wipe split names at start",
+      "title": "Wipe splits at start",
       "tooltip": "After reset, rename every segment in the Podracing splits before the timer starts.",
       "value": ""
     },
